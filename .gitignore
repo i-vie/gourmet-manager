@@ -1,4 +1,4 @@
-.idea/
+backend/gourmet-manager-api/.idea/
 *.iml
 *.iws
 
@@ -10,3 +10,5 @@ target/
 
 .DS_Store
 Thumbs.db
+
+.idea
