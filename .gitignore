@@ -1,0 +1,12 @@
+.idea/
+*.iml
+*.iws
+
+target/
+*.class
+
+.env
+*.env
+
+.DS_Store
+Thumbs.db
