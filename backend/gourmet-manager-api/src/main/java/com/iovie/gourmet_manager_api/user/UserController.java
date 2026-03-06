@@ -66,9 +66,10 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/password")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
     public ResponseEntity<Void> changePassword(@PathVariable Long userId, @RequestBody @Valid PasswordChangeRequest passwordChangeRequest) {
-        return ResponseEntity.ok(userService.)
+        userService.changePassword(userId, passwordChangeRequest);
+        return ResponseEntity.noContent().build();
     }
 
 }
