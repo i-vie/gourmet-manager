@@ -1,5 +1,6 @@
 package com.iovie.gourmet_manager_api.user;
 
+import com.iovie.gourmet_manager_api.user.dto.PasswordChangeRequest;
 import com.iovie.gourmet_manager_api.user.dto.UserMapper;
 import com.iovie.gourmet_manager_api.user.dto.UserRegistrationRequest;
 import com.iovie.gourmet_manager_api.user.dto.UserUpdateRequest;
@@ -53,16 +54,39 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public User update(UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findById(userUpdateRequest.getId()).orElseThrow(() ->
+    public User update(Long userId, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
                 new EntityNotFoundException("User not found"));
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         return userRepository.save(user);
     }
 
-    public User updateLastLogin(User user) {
+    public void updateLastLogin(User user) {
         user.setLastLogin(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    public User deactivateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setEnabled(false);
         return userRepository.save(user);
+    }
+
+    public User activateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setEnabled(true);
+        return userRepository.save(user);
+    }
+
+    public void changePassword(Long userId, PasswordChangeRequest passwordChangeRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!passwordEncoder.matches(passwordChangeRequest.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Wrong password");
+        }
+        user.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+        userRepository.save(user);
     }
 }
