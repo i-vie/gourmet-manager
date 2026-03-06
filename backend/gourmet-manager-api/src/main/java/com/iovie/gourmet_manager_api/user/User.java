@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "roles")
-@ToString(exclude = "roles")
+@EqualsAndHashCode()
+@ToString()
 public class User implements UserDetails {
 
     @Id
@@ -22,8 +22,6 @@ public class User implements UserDetails {
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
 
     private Long id;
-    @Column(nullable = false)
-    private String name;
     @Column(unique = true, nullable = false, length = 100)
     private String email;
     @Column(nullable = false)

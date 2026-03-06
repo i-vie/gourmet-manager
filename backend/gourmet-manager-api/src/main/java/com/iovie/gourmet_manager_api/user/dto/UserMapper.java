@@ -1,8 +1,7 @@
 package com.iovie.gourmet_manager_api.user.dto;
 
 import com.iovie.gourmet_manager_api.user.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -13,7 +12,13 @@ public interface UserMapper {
     @Mapping(target = "lastLogin", ignore = true)
     User toUser(UserRegistrationRequest request);
 
-    @Mapping(target = "role", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
-    User toUser(UserUpdateRequest request);
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "lastLogin", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateUser(UserUpdateRequest request, @MappingTarget User user);
 }

@@ -58,7 +58,6 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new EntityNotFoundException("User not found"));
         user.setEmail(userUpdateRequest.getEmail());
-        user.setName(userUpdateRequest.getName());
         return userRepository.save(user);
     }
 

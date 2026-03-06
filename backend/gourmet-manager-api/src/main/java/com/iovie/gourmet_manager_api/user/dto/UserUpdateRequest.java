@@ -8,5 +8,4 @@ import lombok.*;
 @AllArgsConstructor
 public class UserUpdateRequest {
     private String email;
-    private String name;
 }

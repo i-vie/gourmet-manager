@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class UserResponse {
 
     private Long id;
-    private String name;
     private String email;
     private boolean enabled;
     private String role;
