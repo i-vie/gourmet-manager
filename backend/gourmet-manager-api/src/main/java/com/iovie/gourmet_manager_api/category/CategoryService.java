@@ -1,5 +1,6 @@
 package com.iovie.gourmet_manager_api.category;
 
+import com.iovie.gourmet_manager_api.category.dto.CategoryMapper;
 import com.iovie.gourmet_manager_api.category.dto.CategoryRequest;
 import com.iovie.gourmet_manager_api.category.dto.CategoryResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,19 +14,20 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public List<CategoryResponse> getAll() {
         return categoryRepository.findAll().stream()
-                .map(this::toResponse).toList();
+                .map(categoryMapper::toResponse).toList();
     }
 
     public List<CategoryResponse> getAllActive() {
         return categoryRepository.findByActiveTrue().stream()
-                .map(this::toResponse).toList();
+                .map(categoryMapper::toResponse).toList();
     }
 
     public CategoryResponse getById(Long id){
-        return toResponse(categoryRepository.findById(id)
+        return categoryMapper.toResponse(categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found")));
     }
 
@@ -35,7 +37,7 @@ public class CategoryService {
         }
         Category category = new Category();
         category.setName(categoryRequest.name());
-        return toResponse(categoryRepository.save(category));
+        return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
@@ -45,30 +47,20 @@ public class CategoryService {
             throw new IllegalArgumentException("Category name already in use");
         }
         category.setName(categoryRequest.name());
-        return toResponse(categoryRepository.save(category));
+        return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
     public CategoryResponse activate(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         category.setActive(true);
-        return toResponse(categoryRepository.save(category));
+        return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
     public CategoryResponse deactivate(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         category.setActive(false);
-        return toResponse(categoryRepository.save(category));
-    }
-
-    private CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(
-                category.getId(),
-                category.getName(),
-                category.getActive(),
-                category.getCreatedAt(),
-                category.getUpdatedAt()
-        );
+        return categoryMapper.toResponse(categoryRepository.save(category));
     }
 }
